@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>GeoCoding Result</title>
+</head>
+<body>
+<header style="
+                background-color: #041434;
+                color: white;
+                padding: 10px;
+                text-align: center;
+                height: 50px;
+                line-height: 50px">
+  <h1 style="font-family: Playfair Display, serif; font-size: 18px; margin: 0 auto; padding: 0; color: white">Make your trip with us!</h1>
+</header>
+<p>Origin: <span th:text="${waypoint.origin}"></span></p>
+<p>Result for <span th:text="${waypoint.origin}"></span>: <span th:text="${waypoint.originLoc}"></span></p>
+
+<p>Destination: <span th:text="${waypoint.destination}"></span></p>
+<p>Result for <span th:text="${waypoint.destination}"></span>: <span th:text="${waypoint.destinationLoc}"></span></p>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>GeoCoding Result</title>
+</head>
+<body>
+<h2>GeoCoding Result</h2>
+
+<p>Origin: <span th:text="${waypoint.origin}"></span></p>
+<p>Result for <span th:text="${waypoint.origin}"></span>: <span th:text="${waypoint.originLoc}"></span></p>
+
+<p>Destination: <span th:text="${waypoint.destination}"></span></p>
+<p>Result for <span th:text="${waypoint.destination}"></span>: <span th:text="${waypoint.destinationLoc}"></span></p>
+</body>
+</html>
