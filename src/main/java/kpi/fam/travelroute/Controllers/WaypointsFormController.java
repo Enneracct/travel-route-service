@@ -1,5 +1,5 @@
-package kpi.fam.travelroute.controller;
-import kpi.fam.travelroute.biz.model.Waypoint;
+package kpi.fam.travelroute.Controllers;
+import kpi.fam.travelroute.Model.Waypoint;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.stereotype.Controller;
@@ -18,7 +18,6 @@ public class WaypointsFormController {
     @PostMapping("/make-route")
     public String waypointSubmit(@ModelAttribute Waypoint waypoint, Model model) {
         model.addAttribute("waypoint", waypoint);
-        return "make-route";
+        return "redirect:/geocode?origin=" + waypoint.getOrigin() + "&destination=" + waypoint.getDestination();
     }
-
 }

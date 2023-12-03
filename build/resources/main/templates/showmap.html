@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Display a map on a webpage</title>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.css" rel="stylesheet">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.js"></script>
+  <style>
+    body { margin: 0; padding: 0; }
+    #header { background-color: #041434; color: white; text-align: center; padding: 21px; }
+    #map { position: absolute; top: 60px; bottom: 0; width: 100%; margin: 0; }
+    #to-home-page {
+      display: block;
+      position: relative;
+      margin: 80vh auto auto auto;
+      width: 20vh;
+      height: 40px;
+      padding: 10px;
+      border: none;
+      border-radius: 20px;
+      font-family: Playfair Display, serif;
+      font-size: 12px;
+      text-align: center;
+      color: #fff;
+      background: #041434;
+    }
+  </style>
+</head>
+<body>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.js"></script>
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.css" type="text/css">
+
+<div id="header">
+  <h1 style="font-size: 16px; margin: 0;">Build your dream route with us!</h1>
+</div>
+<div id="map"></div>
+<a href="/make-route"><button id="to-home-page" >Make another route</button></a>
+<script th:inline="javascript">
+  mapboxgl.accessToken = 'pk.eyJ1IjoieGludGVlIiwiYSI6ImNscGZ0c285azFnZjEyaW5rYngzNDRpbzAifQ.GeGzGfZnrXLKFqiXdy0DLg';
+  const pointCenter = JSON.parse("[" + [[${waypoint.originLoc}]] + "]");
+  const map = new mapboxgl.Map({
+    container: 'map',
+    center: pointCenter,
+    zoom: 9 // starting zoom
+  });
+
+  async function getRoute() {
+    const startLoc = /*[[${waypoint.originLoc}]]*/ 'default_value';
+    const endLoc = /*[[${waypoint.destinationLoc}]]*/ 'default_value';
+
+    const query = await fetch(
+            `https://api.mapbox.com/directions/v5/mapbox/cycling/${startLoc};${endLoc}?steps=false&geometries=geojson&access_token=${mapboxgl.accessToken}`,
+            { method: 'GET' }
+    );
+
+    const json = await query.json();
+    const data = json.routes[0];
+    const route = data.geometry.coordinates;
+
+    const geojson = {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'LineString',
+        coordinates: route
+      }
+    };
+
+    if (map.getSource('route')) {
+      map.getSource('route').setData(geojson);
+    }
+
+    else {
+      map.addLayer({
+        id: 'route',
+        type: 'line',
+        source: {
+          type: 'geojson',
+          data: geojson
+        },
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round'
+        },
+        paint: {
+          'line-color': '#3887be',
+          'line-width': 6,
+          'line-opacity': 0.75
+        }
+      });
+    }
+  }
+
+  map.on('load', () => {
+      const startLoc = /*[[${waypoint.originLoc}]]*/ 'default_value';
+      const endLoc = /*[[${waypoint.destinationLoc}]]*/ 'default_value';
+    getRoute();
+
+    const marker1 = new mapboxgl.Marker()
+            .setLngLat(JSON.parse("[" + [[${waypoint.originLoc}]] + "]"))
+            .addTo(map);
+
+    const marker2 = new mapboxgl.Marker({ color: 'red'})
+            .setLngLat(JSON.parse("[" + [[${waypoint.destinationLoc}]] + "]"))
+            .addTo(map);
+
+  });
+</script>
+</body>
+</html>
