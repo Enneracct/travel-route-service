@@ -21,14 +21,13 @@ public class GeoCodingController {
     public String getPoint(@RequestParam("origin") String origin,
                            @RequestParam("destination") String destination,
                            Model model){
-        System.out.println("Received cities: " + origin + destination);
 
         String result1 = geoCodingService.geocodeCity(origin);
         String result2 = geoCodingService.geocodeCity(destination);
 
         Waypoint waypoint = new Waypoint(origin, result1, destination, result2);
         model.addAttribute("waypoint", waypoint);
-        System.out.println(origin + result1 + destination + result2);
+
         return "showmap";
     }
 }

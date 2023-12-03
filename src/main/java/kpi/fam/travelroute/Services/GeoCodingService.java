@@ -31,7 +31,7 @@ public class GeoCodingService {
             double longitude = coordinatesNode.get(0).asDouble();
             double latitude = coordinatesNode.get(1).asDouble();
 
-            return String.format(latitude + "," + longitude);
+            return String.format(longitude + "," + latitude);
 
         } catch (IOException e) {
             e.printStackTrace();
